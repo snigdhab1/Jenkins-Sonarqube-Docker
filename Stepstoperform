@@ -1,0 +1,75 @@
+Features
+•	Returns current UTC timestamp and visitor's IP address.
+•	Lightweight application built with Python and Flask.
+•	Dockerized for portability.
+•	Secure, runs as a non-root user in the container.
+•	Deployable on Kubernetes with provided manifests.
+
+Prerequisites
+Before deploying this project, ensure you have the following tools installed and configured:
+1.	Git
+o	Tool for cloning the repository.
+o	Installation: Git Downloads
+2.	Docker
+o	Tool for containerizing the application.
+o	Installation: Docker Installation Guide
+3.	Kubernetes
+o	Cluster for orchestrating the container.
+o	Installation: Kubernetes Installation Guide
+4.	kubectl
+o	Command-line tool for interacting with the Kubernetes cluster.
+o	Installation: kubectl Installation Guide
+5.	Public Container Registry Account
+o	Example: DockerHub for accessing/publishing the image.
+o	Sign up: DockerHub
+6.	Kubernetes Cluster
+o	Access to a running Kubernetes cluster (e.g., Minikube, AKS, GKE, EKS).
+o	Set up Minikube: Minikube Documentation
+
+Repository Structure
+simple-time-service/
+├── app.py              # Main application code
+├── requirements.txt    # Python dependencies
+├── Dockerfile          # Docker configuration
+├── microservice.yml    # Kubernetes Deployment and Service manifest
+└── README.md           # Documentation (this file)
+
+Deployment Instructions
+Step 1: Clone the Repository
+git clone https://github.com/<your-username>/simple-time-service.git
+cd simple-time-service
+Step 2: Build and Push Docker Image (Optional if Using Prebuilt Image)
+Build the Docker Image
+docker build -t <your-dockerhub-username>/simple-time-service:latest .
+Push the Image to DockerHub
+docker push <your-dockerhub-username>/simple-time-service:latest
+Step 3: Deploy to Kubernetes
+Apply Kubernetes Manifest
+bash
+Copy code
+kubectl apply -f microservice.yml
+Verify Deployment
+kubectl get pods
+kubectl get service simple-time-service
+Access the Service
+1.	Use port forwarding to access the service:
+kubectl port-forward service/simple-time-service 8080:80
+2.	Open your browser or use curl to access the service:
+curl http://localhost:8080
+Notes
+1.	Non-root Security: The container runs as a non-root user (appuser), ensuring enhanced security.
+2.	ClusterIP Service: The Kubernetes service type is ClusterIP, designed for internal cluster communication. Use port forwarding for local testing.
+3.	Customization: Modify microservice.yml to adjust replicas or resource limits.
+Troubleshooting
+1.	Pod Not Running: Check pod logs for errors.
+kubectl logs <pod-name>
+2.	Image Pull Issues: Ensure the Docker image is public or the Kubernetes cluster has access to your DockerHub credentials.
+kubectl create secret docker-registry <secret-name> \
+    --docker-server=https://index.docker.io/v1/ \
+    --docker-username=<your-dockerhub-username> \
+    --docker-password=<your-dockerhub-password> \
+    --docker-email=<your-email>
+Update the deployment to use the secret.
+Repository Link
+Access the project on GitHub:
+https://github.com/snigdhab1/SimpleTimeService-Repository.git
